@@ -1,8 +1,9 @@
 package model
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.google.gson.JsonElement
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,11 +13,8 @@ class RemoteDataSource(
     private val apiService: QnipsService,
 ) {
 
-    var apiData: MutableState<Map<String, JsonElement>> = mutableStateOf(emptyMap())
-
-    init {
-        updateData()
-    }
+    private val _apiData: MutableStateFlow<Map<String, JsonElement>> = MutableStateFlow(emptyMap())
+    val apiData: StateFlow<Map<String, JsonElement>> = _apiData.asStateFlow()
 
     fun updateData() {
         val apiCall = apiService.getProductTable()
@@ -25,7 +23,7 @@ class RemoteDataSource(
 
                 override fun onResponse(call: Call<QnipsResponse>, response: Response<QnipsResponse>) {
                     if (response.isSuccessful) {
-                        apiData.value = response.body()!! // should not be null if successful
+                        _apiData.value = response.body()!! // assumed not to be null if successful, TODO: double check
                     }
                 }
 
