@@ -1,3 +1,8 @@
 package model.data
 
-data class Allergen(val allergenId: String, val label: String)
+import com.google.gson.annotations.SerializedName
+
+data class Allergen(
+    @SerializedName("Id") val allergenId: String,
+    @SerializedName("Label") val label: String
+)
