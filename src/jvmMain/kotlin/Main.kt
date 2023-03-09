@@ -1,69 +1,63 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import model.Api
 import model.RemoteDataSource
-import view.HeaderEntry
-import view.TableEntry
+import view.Table
 import viewmodel.RowViewModel
 
 @Preview
 @Composable
 fun App(dataSource: RemoteDataSource) {
+
     val rowVm = RowViewModel(dataSource)
 
     MaterialTheme {
-        Scaffold(floatingActionButton = {
-            FloatingActionButton(onClick = { dataSource.updateData() }) {
-                Icon(
-                    Icons.Default.Refresh,
-                    contentDescription = null
-                )
-            }
-        }) {
 
-            val tableRows = rowVm.getTableRows().collectAsState(listOf()).value
+        var loadingText by remember { mutableStateOf("no data yet: press refresh") }
 
-            val tableHeader = rowVm.getTableHeader().collectAsState(listOf()).value
-            val rowLegend = rowVm.getRowLegend().collectAsState(listOf()).value
-            // TODO: modularize table content and frame
-            if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
+        val tableRows = rowVm.getTableRows().collectAsState(listOf()).value
+        val tableHeader = rowVm.getTableHeader().collectAsState(listOf()).value
+        val rowLegend = rowVm.getRowLegend().collectAsState(listOf()).value
 
-                Box {
-                    Column {
-                        // Header
-                        Row {
-                            HeaderEntry("Plan")
-                            for (item in tableHeader) {
-                                item?.let { HeaderEntry(it) }
-                            }
-                        }
-                        // Body
-                        for ((i, row) in tableRows.withIndex()) {
-                            Row {
-
-                                HeaderEntry(rowLegend[i])
-
-                                for (item in row) {
-                                    TableEntry(item.title, item.allergens, item.price)
-                                }
-                            }
-                        }
-                    }
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    loadingText = "loading..."
+                    dataSource.updateData()
+                }) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = null
+                    )
                 }
+            }) {
+
+            Column(
+                modifier = Modifier.fillMaxSize().background(Color.Gray),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
+                    Table(tableHeader, rowLegend, tableRows, 150, 120)
+                } else {
+                    Text(loadingText, color = Color.White)
+                }
+
             }
         }
     }
@@ -78,6 +72,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "Menu",
             state = WindowState(width = 1000.dp, height = 600.dp)
+
         ) {
             App(source)
         }
