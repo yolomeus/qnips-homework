@@ -51,6 +51,19 @@ class RowViewModel(private val source: RemoteDataSource) {
             val prodId = day.productIds[0].id
             products[prodId]
         }
+
+    fun getTableHeader() =
+        source.apiData.map { response ->
+            val dayNames = listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
+            val idxToName = dayNames.indices.associateWith { dayNames[it] }
+            val weekdays = response.rows.map { row -> row.days.map { day -> idxToName[day.weekday] } }
+            if (weekdays.isNotEmpty()) weekdays[0] else emptyList()
+        }
+
+    fun getRowLegend() =
+        source.apiData.map { response ->
+            response.rows.map { it.name }
+        }
 }
 
 private fun Number?.toEuroStr() = String.format("%.2f€", this)
