@@ -24,6 +24,6 @@ fun TableEntry(title: String, allergens: String, price: String) {
 @Composable
 fun HeaderEntry(title: String) {
     Card {
-        Text(title, modifier = Modifier.padding(5.dp))
+        Text(title, modifier = Modifier.padding(10.dp).width(150.dp))
     }
 }
