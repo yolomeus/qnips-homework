@@ -3,6 +3,7 @@ package model
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import model.data.QnipsResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,7 +16,13 @@ class RemoteDataSource(
 
     private val _apiData: MutableStateFlow<QnipsResponse> =
         MutableStateFlow(QnipsResponse(emptyMap(), emptyMap(), emptyList()))
-    val apiData: StateFlow<QnipsResponse> = _apiData.asStateFlow()
+
+    private val apiData: StateFlow<QnipsResponse> = _apiData.asStateFlow()
+
+    val rows = apiData.map { it.rows }
+    val products = apiData.map { it.products }
+    val allergens = apiData.map { it.allergens }
+
 
     fun updateData() {
         val apiCall = apiService.getProductTable()
