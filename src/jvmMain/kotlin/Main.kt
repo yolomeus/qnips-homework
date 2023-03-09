@@ -1,35 +1,60 @@
-import androidx.compose.material.Button
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import kotlinx.coroutines.Dispatchers
 import model.Api
 import model.RemoteDataSource
+import view.TableEntry
 import viewmodel.RowViewModel
 
-
+@Preview
 @Composable
 fun App(dataSource: RemoteDataSource) {
     val rowVm = RowViewModel(dataSource)
 
-    val rows by remember { rowVm.rows }.collectAsState(Dispatchers.IO)
-
     MaterialTheme {
-        Button(onClick = {
-            dataSource.updateData()
+        Scaffold(floatingActionButton = {
+            FloatingActionButton(onClick = { dataSource.updateData() }) {
+                Icon(
+                    Icons.Default.Refresh,
+                    contentDescription = null
+                )
+            }
         }) {
-            Text("load")
+
+            val tableRows = rowVm.getTableRows().collectAsState(listOf()).value
+
+            if (tableRows.isNotEmpty()) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column {
+                        for (row in tableRows) {
+                            Row {
+                                for (item in row) {
+                                    TableEntry(item.title, item.allergens, item.price)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        Text(rows.toString())
     }
 }
+
 
 fun main() {
     val source = RemoteDataSource(Api.service)
@@ -38,7 +63,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "Menu",
-            state = WindowState(width = 1200.dp, height = 800.dp)
+            state = WindowState(width = 1000.dp, height = 600.dp)
         ) {
             App(source)
         }
