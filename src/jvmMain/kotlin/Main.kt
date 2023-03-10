@@ -51,7 +51,7 @@ fun App(rowVm: RowViewModel) {
             ) {
                 // only try displaying table if all flows have emitted data
                 if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
-                    Table(tableHeader, rowLegend, tableRows, 160.dp, 120.dp)
+                    Table(tableHeader, rowLegend, tableRows, 180.dp, 150.dp)
                 } else {
                     Text(loadingText, color = Color.White)
                 }
@@ -71,7 +71,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "Menu",
-            state = WindowState(width = 1000.dp, height = 600.dp)
+            state = WindowState(width = 1200.dp, height = 600.dp)
         ) {
             App(rowVm)
         }
