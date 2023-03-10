@@ -5,15 +5,16 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import viewmodel.TableItem
 
 @Composable
-fun TableEntry(title: String, allergens: String, price: String, cardWidth: Int, cardHeight: Int) {
+fun TableEntry(title: String, allergens: String, price: String, cardWidth: Dp, cardHeight: Dp) {
     Card(
         modifier = Modifier
-            .width(cardWidth.dp)
-            .height(cardHeight.dp)
+            .width(cardWidth)
+            .height(cardHeight)
             .padding(5.dp)
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
@@ -25,10 +26,10 @@ fun TableEntry(title: String, allergens: String, price: String, cardWidth: Int, 
 }
 
 @Composable
-fun HeaderEntry(title: String, cardWidth: Int) {
+fun HeaderEntry(title: String, cardWidth: Dp) {
     Card(
         modifier = Modifier
-            .width(cardWidth.dp)
+            .width(cardWidth)
             .padding(5.dp)
     ) {
         Text(
@@ -43,8 +44,8 @@ fun Table(
     tableHeader: List<String?>,
     rowLegend: List<String>,
     tableRows: List<List<TableItem>>,
-    cardWidth: Int,
-    cardHeight: Int
+    cardWidth: Dp,
+    cardHeight: Dp
 ) {
 
     // Header
