@@ -1,21 +1,26 @@
 package viewmodel
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import model.RemoteDataSource
 import model.data.Allergen
 import model.data.Product
+import model.data.QnipsResponse
 import model.data.Row
 
 /**
  * ViewModel for connecting UI to DataSource. Responsible for transforming data flows into a consumable format for the
  * UI and for notifying the model if an explicit data update is requested.
  */
-class RowViewModel(private val source: RemoteDataSource) {
+class RowViewModel(source: RemoteDataSource) {
+
+    private val _apiData: Flow<QnipsResponse> = source.apiData
+
     /**
      * Transform flow of [model.data.QnipsResponse] to flow of list of table rows, i.e. List<List<[TableItem]>>.
      */
     fun getTableRows() =
-        source.apiData.map {
+        _apiData.map {
             val allergenMap = it.allergens
             val products = it.products
             val rows = it.rows
@@ -50,7 +55,7 @@ class RowViewModel(private val source: RemoteDataSource) {
      * Retrieve row of day names, maps numbers 0..5 to names of weekdays.
      */
     fun getTableHeader() =
-        source.apiData.map { response ->
+        _apiData.map { response ->
             // too many responsibilities and hardcoded but let's keep this simple...
             val dayNames = listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
             val idxToName = dayNames.indices.associateWith { dayNames[it] }
@@ -59,7 +64,7 @@ class RowViewModel(private val source: RemoteDataSource) {
         }
 
     fun getRowLegend() =
-        source.apiData.map { response ->
+        _apiData.map { response ->
             response.rows.map { it.name }
         }
 
