@@ -21,7 +21,7 @@ import viewmodel.RowViewModel
 
 @Preview
 @Composable
-fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
+fun App(rowVm: RowViewModel) {
     // collect states from data flows in order to display in compose
     val tableRows by rowVm.getTableRows().collectAsState(listOf())
     val tableHeader by rowVm.getTableHeader().collectAsState(listOf())
@@ -35,7 +35,7 @@ fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
             floatingActionButton = {
                 FloatingActionButton(onClick = {
                     loadingText = "loading..."
-                    dataSource.updateData()
+                    rowVm.updateData()
                 }) {
                     Icon(
                         Icons.Default.Refresh,
@@ -55,7 +55,6 @@ fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
                 } else {
                     Text(loadingText, color = Color.White)
                 }
-
             }
         }
     }
@@ -74,7 +73,7 @@ fun main() {
             title = "Menu",
             state = WindowState(width = 1000.dp, height = 600.dp)
         ) {
-            App(dataSource, rowVm)
+            App(rowVm)
         }
     }
 }

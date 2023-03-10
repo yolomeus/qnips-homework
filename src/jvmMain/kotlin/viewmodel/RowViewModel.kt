@@ -12,7 +12,7 @@ import model.data.Row
  * ViewModel for connecting UI to DataSource. Responsible for transforming data flows into a consumable format for the
  * UI and for notifying the model if an explicit data update is requested.
  */
-class RowViewModel(source: RemoteDataSource) {
+class RowViewModel(private val source: RemoteDataSource) {
 
     private val _apiData: Flow<QnipsResponse> = source.apiData
 
@@ -90,6 +90,13 @@ class RowViewModel(source: RemoteDataSource) {
             val prodId = day.productIds[0].id
             products[prodId]
         }
+
+    /**
+     * Request data update from [source].
+     */
+    fun updateData() {
+        source.updateData()
+    }
 }
 
 /**
