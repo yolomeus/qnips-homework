@@ -6,13 +6,21 @@ import model.data.Allergen
 import model.data.Product
 import model.data.Row
 
+/**
+ * ViewModel for connecting UI to DataSource. Responsible for transforming data flows into a consumable format for the
+ * UI and for notifying the model if an explicit data update is requested.
+ */
 class RowViewModel(private val source: RemoteDataSource) {
+    /**
+     * Transform flow of [model.data.QnipsResponse] to flow of list of table rows, i.e. List<List<[TableItem]>>.
+     */
     fun getTableRows() =
         source.apiData.map {
             val allergenMap = it.allergens
             val products = it.products
             val rows = it.rows
 
+            // our result list of table rows to be filled
             val tableRows = mutableListOf<List<TableItem>>()
 
             rows.forEach { row ->
@@ -38,22 +46,12 @@ class RowViewModel(private val source: RemoteDataSource) {
             tableRows.toList()
         }
 
-    private fun getAllergenRow(productRow: List<Product?>, allergenMap: Map<String, Allergen>) =
-        productRow.map { product ->
-            product?.allergenIds?.map { alId -> allergenMap[alId]?.label }.toString()
-        }
-
-    private fun getPriceRow(productRow: List<Product?>) =
-        productRow.map { product -> product?.price?.amount.toEuroStr() }
-
-    private fun getProductRow(row: Row, products: Map<Long, Product>) =
-        row.days.map { day ->
-            val prodId = day.productIds[0].id
-            products[prodId]
-        }
-
+    /**
+     * Retrieve row of day names, maps numbers 0..5 to names of weekdays.
+     */
     fun getTableHeader() =
         source.apiData.map { response ->
+            // too many responsibilities and hardcoded but let's keep this simple...
             val dayNames = listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
             val idxToName = dayNames.indices.associateWith { dayNames[it] }
             val weekdays = response.rows.map { row -> row.days.map { day -> idxToName[day.weekday] } }
@@ -64,9 +62,38 @@ class RowViewModel(private val source: RemoteDataSource) {
         source.apiData.map { response ->
             response.rows.map { it.name }
         }
+
+    /**
+     * Extract a table row, i.e. List<String> of allergens, given [productRow] and [allergenMap].
+     */
+    private fun getAllergenRow(productRow: List<Product?>, allergenMap: Map<String, Allergen>) =
+        productRow.map { product ->
+            product?.allergenIds?.map { alId -> allergenMap[alId]?.label }.toString()
+        }
+
+    /**
+     * Extract a row of prices from [productRow] a row of [Product], as formatted strings with 2 decimal places.
+     */
+    private fun getPriceRow(productRow: List<Product?>) =
+        productRow.map { product -> product?.price?.amount.toEuroStr() }
+
+    /**
+     * Retrieve row of product names given [row] and [products].
+     */
+    private fun getProductRow(row: Row, products: Map<Long, Product>) =
+        row.days.map { day ->
+            val prodId = day.productIds[0].id
+            products[prodId]
+        }
 }
 
+/**
+ * Format [Number] to [String] with 2 decimal places.
+ */
 private fun Number?.toEuroStr() = String.format("%.2f€", this)
 
+/**
+ * Intermediate representation for table elements to be used in the UI.
+ */
 data class TableItem(val title: String, val allergens: String, val price: String)
 
