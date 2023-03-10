@@ -9,8 +9,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import viewmodel.TableItem
 
+/**
+ * UI element representing entry in the food menu table.
+ */
 @Composable
-fun TableEntry(title: String, allergens: String, price: String, cardWidth: Dp, cardHeight: Dp) {
+fun TableEntry(
+    title: String,
+    allergens: String,
+    price: String,
+    cardWidth: Dp,
+    cardHeight: Dp
+) {
     Card(
         modifier = Modifier
             .width(cardWidth)
@@ -25,6 +34,9 @@ fun TableEntry(title: String, allergens: String, price: String, cardWidth: Dp, c
     }
 }
 
+/**
+ * UI element representing header entry of table.
+ */
 @Composable
 fun HeaderEntry(title: String, cardWidth: Dp) {
     Card(
@@ -39,6 +51,9 @@ fun HeaderEntry(title: String, cardWidth: Dp) {
     }
 }
 
+/**
+ * The full menu table as UI element.
+ */
 @Composable
 fun Table(
     tableHeader: List<String?>,
