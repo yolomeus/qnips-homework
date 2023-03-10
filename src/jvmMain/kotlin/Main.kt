@@ -51,7 +51,7 @@ fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
             ) {
                 // only try displaying table if all flows have emitted data
                 if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
-                    Table(tableHeader, rowLegend, tableRows, 150.dp, 120.dp)
+                    Table(tableHeader, rowLegend, tableRows, 160.dp, 120.dp)
                 } else {
                     Text(loadingText, color = Color.White)
                 }
