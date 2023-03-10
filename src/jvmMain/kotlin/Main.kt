@@ -28,7 +28,7 @@ fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
     val rowLegend by rowVm.getRowLegend().collectAsState(listOf())
 
     // displayed if no data loaded yet or loading has been triggered
-    var loadingText by remember { mutableStateOf("no data yet: press refresh") }
+    var loadingText by remember { mutableStateOf("No data yet: press refresh!") }
 
     MaterialTheme {
         Scaffold(
