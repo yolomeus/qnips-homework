@@ -15,7 +15,9 @@ object QnipsApi {
     private val retrofit: Retrofit by lazy { buildRetrofit() }
     val service: QnipsService by lazy { retrofit.create(QnipsService::class.java) }
 
-
+    /**
+     * Configure and build the retrofit service.
+     */
     private fun buildRetrofit(): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
