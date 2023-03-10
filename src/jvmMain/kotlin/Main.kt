@@ -21,18 +21,16 @@ import viewmodel.RowViewModel
 
 @Preview
 @Composable
-fun App(dataSource: RemoteDataSource) {
+fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
+    // collect states from data flows in order to display in compose
+    val tableRows by rowVm.getTableRows().collectAsState(listOf())
+    val tableHeader by rowVm.getTableHeader().collectAsState(listOf())
+    val rowLegend by rowVm.getRowLegend().collectAsState(listOf())
 
-    val rowVm = RowViewModel(dataSource)
+    // displayed if no data loaded yet or loading has been triggered
+    var loadingText by remember { mutableStateOf("no data yet: press refresh") }
 
     MaterialTheme {
-
-        var loadingText by remember { mutableStateOf("no data yet: press refresh") }
-
-        val tableRows = rowVm.getTableRows().collectAsState(listOf()).value
-        val tableHeader = rowVm.getTableHeader().collectAsState(listOf()).value
-        val rowLegend = rowVm.getRowLegend().collectAsState(listOf()).value
-
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(onClick = {
@@ -51,7 +49,7 @@ fun App(dataSource: RemoteDataSource) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
+                // only try displaying table if all flows have emitted data
                 if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
                     Table(tableHeader, rowLegend, tableRows, 150, 120)
                 } else {
@@ -65,16 +63,18 @@ fun App(dataSource: RemoteDataSource) {
 
 
 fun main() {
-    val source = RemoteDataSource(Api.service)
+    // model
+    val dataSource = RemoteDataSource(Api.service)
+    val rowVm = RowViewModel(dataSource)
 
+    // UI
     application {
         Window(
             onCloseRequest = ::exitApplication,
             title = "Menu",
             state = WindowState(width = 1000.dp, height = 600.dp)
-
         ) {
-            App(source)
+            App(dataSource, rowVm)
         }
     }
 }
