@@ -51,6 +51,8 @@ fun App(rowVm: RowViewModel) {
             ) {
                 // only try displaying table if all flows have emitted data
                 if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
+                    // would be better if layout were responsive, but I'm not familiar enough with compose yet and
+                    // there's no more time, hence fixed sizes
                     Table(tableHeader, rowLegend, tableRows, 180.dp, 150.dp)
                 } else {
                     Text(loadingText, color = Color.White)
