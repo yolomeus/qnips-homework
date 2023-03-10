@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import model.Api
+import model.QnipsApi
 import model.RemoteDataSource
 import view.Table
 import viewmodel.RowViewModel
@@ -64,7 +64,7 @@ fun App(dataSource: RemoteDataSource, rowVm: RowViewModel) {
 
 fun main() {
     // model
-    val dataSource = RemoteDataSource(Api.service)
+    val dataSource = RemoteDataSource(QnipsApi.service)
     val rowVm = RowViewModel(dataSource)
 
     // UI
