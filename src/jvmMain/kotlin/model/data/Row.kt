@@ -1,9 +1,11 @@
 package model.data
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 
+@Serializable
 data class Row(
-    @SerializedName("Name") val name: String,
-    @SerializedName("Days") val days: List<Day>
+    @SerialName("Name") val name: String,
+    @SerialName("Days") val days: List<Day>
 )
