@@ -1,12 +1,14 @@
 package model
 
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import model.data.QnipsResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /**
  * Handles interactions with the qnips [apiService]. Note that the coupling with [QnipsService] is not
@@ -14,7 +16,7 @@ import retrofit2.Response
  * @property apiData A [StateFlow] of [QnipsResponse] fetched from the [apiService].
  */
 class RemoteDataSource(
-    private val apiService: QnipsService,
+    private val apiService: QnipsApi,
 ) {
 
     private val _apiData: MutableStateFlow<QnipsResponse> =
@@ -26,21 +28,11 @@ class RemoteDataSource(
      * Triggers asynchronous call to [apiService], in order to fetch a new [QnipsResponse] and update [apiData]
      * accordingly.
      */
-    fun updateData() {
-        val apiCall = apiService.getProductTable()
-        apiCall.enqueue(
-            object : Callback<QnipsResponse> {
-
-                override fun onResponse(call: Call<QnipsResponse>, response: Response<QnipsResponse>) {
-                    if (response.isSuccessful) {
-                        _apiData.value = response.body()!! // assumed not to be null if successful
-                    }
-                }
-
-                override fun onFailure(call: Call<QnipsResponse>, t: Throwable) {
-                    // TODO propagate timeout error to UI, happens...
-                    throw t
-                }
-            })
+    suspend fun updateData() {
+        val client = HttpClient()
+        val x = client.get("https://myprelive.qnips.com/dbapi/ha")
+        val stringBody: String = x.body()
+        val response = Json.decodeFromString<QnipsResponse>(stringBody)
+        _apiData.value = response
     }
 }
