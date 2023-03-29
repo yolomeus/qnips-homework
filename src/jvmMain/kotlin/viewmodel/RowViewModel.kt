@@ -56,7 +56,7 @@ class RowViewModel(private val source: RemoteDataSource) {
     fun getTableHeader() =
         _apiData.map { response ->
             // too many responsibilities and hardcoded but let's keep this simple...
-            val dayNames = listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
+            val dayNames = listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")
             val idxToName = dayNames.indices.associateWith { dayNames[it] }
             val weekdays = response.rows.map { row -> row.days.map { day -> idxToName[day.weekday] } }
             if (weekdays.isNotEmpty()) weekdays[0] else emptyList()
