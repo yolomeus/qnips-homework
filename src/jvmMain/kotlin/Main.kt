@@ -14,6 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import model.QnipsApi
 import model.RemoteDataSource
 import view.Table
@@ -21,7 +24,8 @@ import viewmodel.RowViewModel
 
 @Preview
 @Composable
-fun App(rowVm: RowViewModel) {
+fun App(rowVm: RowViewModel, coroutineScope: CoroutineScope) {
+
     // collect states from data flows in order to display in compose
     val tableRows by rowVm.getTableRows().collectAsState(listOf())
     val tableHeader by rowVm.getTableHeader().collectAsState(listOf())
@@ -35,7 +39,10 @@ fun App(rowVm: RowViewModel) {
             floatingActionButton = {
                 FloatingActionButton(onClick = {
                     loadingText = "loading..."
-                    rowVm.updateData()
+                    coroutineScope.launch {
+                        rowVm.updateData()
+                    }
+
                 }) {
                     Icon(
                         Icons.Default.Refresh,
@@ -62,12 +69,11 @@ fun App(rowVm: RowViewModel) {
     }
 }
 
-
-fun main() {
+fun main() = runBlocking {
     // model
-    val dataSource = RemoteDataSource(QnipsApi.service)
+    val dataSource = RemoteDataSource(QnipsApi)
     val rowVm = RowViewModel(dataSource)
-
+    val coroutineScope = this
     // UI
     application {
         Window(
@@ -75,7 +81,7 @@ fun main() {
             title = "Menu",
             state = WindowState(width = 1920.dp, height = 1080.dp)
         ) {
-            App(rowVm)
+            App(rowVm, coroutineScope)
         }
     }
 }

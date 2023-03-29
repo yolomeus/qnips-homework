@@ -78,7 +78,7 @@ class RowViewModel(private val source: RemoteDataSource) {
     /**
      * Request data update from [source].
      */
-    fun updateData() {
+    suspend fun updateData() {
         source.updateData()
     }
 }
