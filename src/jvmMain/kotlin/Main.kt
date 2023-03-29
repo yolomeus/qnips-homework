@@ -53,7 +53,7 @@ fun App(rowVm: RowViewModel) {
                 if (listOf(tableRows, tableHeader, rowLegend).all { it.isNotEmpty() }) {
                     // would be better if layout were responsive, but I'm not familiar enough with compose yet and
                     // there's no more time, hence fixed sizes
-                    Table(tableHeader, rowLegend, tableRows, 180.dp, 150.dp)
+                    Table(tableHeader, rowLegend, tableRows, 220.dp, 300.dp)
                 } else {
                     Text(loadingText, color = Color.White)
                 }
@@ -73,7 +73,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "Menu",
-            state = WindowState(width = 1200.dp, height = 600.dp)
+            state = WindowState(width = 1920.dp, height = 1080.dp)
         ) {
             App(rowVm)
         }

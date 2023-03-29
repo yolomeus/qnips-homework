@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object QnipsApi {
     // hardcoded for simplicity + coupling with QnipsService is bad.
-    private const val BASE_URL = "https://my.qnips.io/"
+    private const val BASE_URL = "https://myprelive.qnips.com/"
 
     private val retrofit: Retrofit by lazy { buildRetrofit() }
     val service: QnipsService by lazy { retrofit.create(QnipsService::class.java) }

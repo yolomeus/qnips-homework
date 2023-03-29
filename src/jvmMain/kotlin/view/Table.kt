@@ -14,9 +14,7 @@ import viewmodel.TableItem
  */
 @Composable
 fun TableEntry(
-    title: String,
-    allergens: String,
-    price: String,
+    tableItem: TableItem,
     cardWidth: Dp,
     cardHeight: Dp
 ) {
@@ -27,9 +25,15 @@ fun TableEntry(
             .padding(5.dp)
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
-            Text(title)
-            Text(allergens)
-            Text(price)
+            tableItem.items.forEachIndexed { i, p ->
+                p?.let {
+                    Text(p.title)
+                    Text(p.allergens)
+                    Text(p.price)
+                }
+                if (i != tableItem.items.size - 1)
+                    Spacer(modifier = Modifier.size(15.dp))
+            }
         }
     }
 }
@@ -75,7 +79,7 @@ fun Table(
         Row {
             HeaderEntry(rowLegend[i], cardWidth)
             for (item in row) {
-                TableEntry(item.title, item.allergens, item.price, cardWidth, cardHeight)
+                TableEntry(item, cardWidth, cardHeight)
             }
         }
     }
