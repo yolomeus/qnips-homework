@@ -4,8 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Represents an Answer from the qnips api. The mapping from api names to kotlin properties is defined thorugh
- * [SerializedName] annotations and therefore only works with GSON at the moment.
+ * Represents an Answer from the qnips api. The mapping from api names to kotlin properties is defined through
+ * [SerialName] annotations and therefore only works with kotlinx serialization at the moment.
  */
 
 @Serializable
