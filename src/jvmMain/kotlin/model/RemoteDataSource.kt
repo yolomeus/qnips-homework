@@ -11,9 +11,8 @@ import kotlinx.serialization.json.Json
 import model.data.QnipsResponse
 
 /**
- * Handles interactions with the qnips [apiService]. Note that the coupling with [QnipsService] is not
- * desirable and could be generalized, however is kept for simplicity of this homework.
- * @property apiData A [StateFlow] of [QnipsResponse] fetched from the [apiService].
+ * Handles interactions with the qnips api.
+ * @property apiData A [StateFlow] of [QnipsResponse].
  */
 class RemoteDataSource {
 
