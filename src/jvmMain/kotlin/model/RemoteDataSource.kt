@@ -15,9 +15,7 @@ import model.data.QnipsResponse
  * desirable and could be generalized, however is kept for simplicity of this homework.
  * @property apiData A [StateFlow] of [QnipsResponse] fetched from the [apiService].
  */
-class RemoteDataSource(
-    private val apiService: QnipsApi,
-) {
+class RemoteDataSource {
 
     private val _apiData: MutableStateFlow<QnipsResponse> =
         MutableStateFlow(QnipsResponse(emptyMap(), emptyMap(), emptyList()))
@@ -25,7 +23,7 @@ class RemoteDataSource(
     val apiData: StateFlow<QnipsResponse> = _apiData.asStateFlow()
 
     /**
-     * Triggers asynchronous call to [apiService], in order to fetch a new [QnipsResponse] and update [apiData]
+     * Triggers asynchronous call using ktor, in order to fetch a new [QnipsResponse] and update [apiData]
      * accordingly.
      */
     suspend fun updateData() {

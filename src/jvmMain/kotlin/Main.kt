@@ -17,7 +17,6 @@ import androidx.compose.ui.window.application
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import model.QnipsApi
 import model.RemoteDataSource
 import view.Table
 import viewmodel.RowViewModel
@@ -71,7 +70,7 @@ fun App(rowVm: RowViewModel, coroutineScope: CoroutineScope) {
 
 fun main() = runBlocking {
     // model
-    val dataSource = RemoteDataSource(QnipsApi)
+    val dataSource = RemoteDataSource()
     val rowVm = RowViewModel(dataSource)
     val coroutineScope = this
     // UI
