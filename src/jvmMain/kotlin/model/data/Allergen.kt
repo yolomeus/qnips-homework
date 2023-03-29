@@ -1,8 +1,10 @@
 package model.data
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Allergen(
-    @SerializedName("Id") val allergenId: String,
-    @SerializedName("Label") val label: String
+    @SerialName("Id") val allergenId: String,
+    @SerialName("Label") val label: String
 )
